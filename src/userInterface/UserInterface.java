@@ -1,5 +1,6 @@
 /**
- * userInterfaces Hier befinden sich alle Klassen die mit dem User-Interface zu tun haben.
+ * userInterfaces Hier befinden sich alle Klassen die mit dem User-Interface zu
+ * tun haben.
  */
 package userInterface;
 
@@ -7,18 +8,15 @@ import exceptions.InputException;
 import objects.Person;
 
 /**
- * Beschreibung:
- * Diese Klasse handelt die Gewichtsausgabe einer Person.
+ * Beschreibung: Diese Klasse handelt die Gewichtsausgabe einer Person.
  *
- * @author Malte Dammann
- * E-Mail: s0549309@htw-berlin.de
- * Bearbeitungszeitraum: 22.04.15 - 28.04.2015
+ * @author Malte Dammann E-Mail: s0549309@htw-berlin.de Bearbeitungszeitraum:
+ * 22.04.15 - 28.04.2015
  *
  * Modul: Programmierung 2
  *
- * Dateiname: Engine.java
- * IDE: NetBeans IDE 8.0.2
- * Java: 1.8.0_20; Java HotSpot(TM) 64-Bit
+ * Dateiname: Engine.java IDE: NetBeans IDE 8.0.2 Java: 1.8.0_20; Java
+ * HotSpot(TM) 64-Bit
  *
  * @since 2015-04-22
  * @version 0.5
@@ -39,7 +37,7 @@ public class UserInterface {
      */
     public void start() throws Exception {
 
-        boolean weiter = false;
+        boolean weiter = false, weiter1 = false;
 
         // Initialisierung des Scanners
         Eingabe.init();
@@ -59,12 +57,16 @@ public class UserInterface {
                 }
 
                 if (counter < MAXPERSONEN) {
-                    menuAusgabe("Willst du noch eine weitere Person hinzufügen? (ja = true / nein = false)");
-                    try {
-                        loopMehrPersonen = Eingabe.liesAuswahlBoolean();
-                    } catch (InputException e) {
-                        System.err.println("Bitte einen Boolean eingeben...");
-                    }
+                    do {
+                        menuAusgabe("Willst du noch eine weitere Person hinzufügen? (ja = true / nein = false)");
+                        try {
+                            loopMehrPersonen = Eingabe.liesAuswahlBoolean();
+                            weiter1 = true;
+                        } catch (InputException e) {
+                            System.err.println("Bitte einen Boolean eingeben...");
+                            weiter1 = false;
+                        }
+                    } while (!weiter1);
                 } else {
                     loopMehrPersonen = false;
                     System.err.println("Maximnale Anzahl für das Array ist erreicht.");
@@ -216,7 +218,8 @@ public class UserInterface {
 
     /**
      *
-     * @return Anzahl der belegten Specihereinheiten in dem Array PERSONEN_ARRAY.
+     * @return Anzahl der belegten Specihereinheiten in dem Array
+     * PERSONEN_ARRAY.
      */
     private int getUsedIndizes() {
         int anzahl = 0;

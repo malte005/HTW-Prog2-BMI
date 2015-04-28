@@ -1,14 +1,31 @@
+/**
+ * bmiHelper Package in der sich der Helper-Klassen befinden.
+ */
 package bmiHelper;
 
 /**
- * @version 0.2
- * @author Malte
+ * Beschreibung:
+ * Helper-Klasse um die Gewichte auszurechnen.
+ *
+ * @author Malte Dammann
+ * E-Mail: s0549309@htw-berlin.de
+ * Bearbeitungszeitraum: 22.04.15 - 28.04.2015
+ *
+ * Modul: Programmierung 2
+ * 
+ * Dateiname: Engine.java
+ * IDE: NetBeans IDE 8.0.2
+ * Java: 1.8.0_20; Java HotSpot(TM) 64-Bit
+ *
+ * @since 2015-04-22
+ * @version 0.8
+ *
  */
-public class Bmi {
+public abstract class Bmi {
 
-    private float bmiWert;
-    private float idealGewicht;
-    private float normalGewicht;
+    private static float bmiWert;
+    private static float idealGewicht;
+    private static float normalGewicht;
 
     /**
      *
@@ -16,8 +33,8 @@ public class Bmi {
      * @param koerperGroesse Die Körpergröße der Person in cm.
      * @return Der BMI-Wert wird zurückgegeben.
      */
-    public float getBmiWert(float koerperGewicht, int koerperGroesse) {
-        bmiWert = koerperGewicht / ((koerperGroesse * koerperGroesse)/10000);
+    public static float getBmiWert(float koerperGewicht, int koerperGroesse) {
+        bmiWert = koerperGewicht / ((koerperGroesse * koerperGroesse) / (float)10000);
         return bmiWert;
     }
 
@@ -27,7 +44,7 @@ public class Bmi {
      * @param normalGewicht Das Berechnete Normalgewicht der Person in kg.
      * @return Das Idealgewicht der Person wird in kg zurückgegeben.
      */
-    public float getIdealGewicht(boolean geschlecht, float normalGewicht) {
+    public static float getIdealGewicht(boolean geschlecht, float normalGewicht) {
         if (geschlecht) {
             idealGewicht = (float) (normalGewicht * 0.9);
         } else {
@@ -42,7 +59,7 @@ public class Bmi {
      * @param koerperGroesse Die Körpergröße der Person in cm.
      * @return Das berechnete Normalgewicht der Person wird in kg zurückgegeben.
      */
-    public float getNormalGewicht(int koerperGroesse) {
+    public static float getNormalGewicht(int koerperGroesse) {
         normalGewicht = koerperGroesse - 100;
         return normalGewicht;
     }

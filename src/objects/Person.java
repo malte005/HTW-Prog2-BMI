@@ -1,13 +1,27 @@
 /**
- * bmi Packet in dem sich die Objektklassen befniden.
+ * objects Packet in dem sich die Objektklassen befniden.
  */
 package objects;
 
 import bmiHelper.Bmi;
 
 /**
- * @version 0.2
- * @author Malte
+ * Beschreibung:
+ * Personen-Klasse, mit dessen Objkten in diesem Programm gearbeitet wird.
+ *
+ * @author Malte Dammann
+ * E-Mail: s0549309@htw-berlin.de
+ * Bearbeitungszeitraum: 22.04.15 - 28.04.2015
+ *
+ * Modul: Programmierung 2
+ * 
+ * Dateiname: Engine.java
+ * IDE: NetBeans IDE 8.0.2
+ * Java: 1.8.0_20; Java HotSpot(TM) 64-Bit
+ *
+ * @since 2015-04-22
+ * @version 0.3
+ *
  */
 public class Person {
 
@@ -16,34 +30,32 @@ public class Person {
     private boolean geschlecht; //Mann = true
     private int koerperGroesse; // in cm
     private float koerperGewicht; // in kg
-    
-    private final Bmi BMI = new Bmi();
 
     //Konstruktoren
     public Person() {
-        this("Mustermann", true, 190, 90.0f);
+        this("Musterfrau", false, 165, 85.0f);
     }
 
     /**
      *
      * @param name Der Name der Person.
      */
-    public Person(String name) {
+    private Person(String name) {
         this(name, true, 190, 90.0f);
     }
 
     /**
      *
-     * @param name Der Name der Person.
+     * @param name           Der Name der Person.
      * @param koerperGroesse Die Größer der Person in cm.
      */
-    public Person(String name, int koerperGroesse) {
+    private Person(String name, int koerperGroesse) {
         this(name, true, koerperGroesse, 90.0f);
     }
 
     /**
      *
-     * @param name Der Name der Person.
+     * @param name           Der Name der Person.
      * @param koerperGroesse Die Größer der Person in cm.
      * @param koerperGewicht Das Körpergewicht der Person in kg.
      */
@@ -53,8 +65,8 @@ public class Person {
 
     /**
      *
-     * @param name Der Name der Person.
-     * @param geschlecht Das Geschlecht der Person (Mann = true / Frau = false).
+     * @param name           Der Name der Person.
+     * @param geschlecht     Das Geschlecht der Person (Mann = true / Frau = false).
      * @param koerperGroesse Die Größer der Person in cm.
      * @param koerperGewicht Das Körpergewicht der Person in kg.
      */
@@ -135,7 +147,7 @@ public class Person {
      * @return Den BMI-Wert der Person.
      */
     public float getBmiWert() {
-        return BMI.getBmiWert(this.koerperGewicht, this.koerperGroesse);
+        return Bmi.getBmiWert(this.koerperGewicht, this.koerperGroesse);
     }
 
     /**
@@ -143,7 +155,7 @@ public class Person {
      * @return Das Idealgewicht der Person in kg.
      */
     public float getIdealgweicht() {
-        return BMI.getIdealGewicht(this.geschlecht, getNormalgewicht());
+        return Bmi.getIdealGewicht(this.geschlecht, getNormalgewicht());
     }
 
     /**
@@ -151,19 +163,19 @@ public class Person {
      * @return Das Normalgewicht der Person in kg.
      */
     public float getNormalgewicht() {
-        return BMI.getNormalGewicht(this.koerperGroesse);
+        return Bmi.getNormalGewicht(this.koerperGroesse);
     }
 
     @Override
     public String toString() {
-        String temp = "Person{" + "name=" + name
-                + ", koerperGroesse=" + koerperGroesse + " cm"
-                + ", koerperGewicht=" + koerperGewicht + " kg";
+        String temp = "\tName: " + name
+                + "\n\tKoerpergröße: " + koerperGroesse + " cm"
+                + "\n\tKoerpergewicht: " + koerperGewicht + " kg";
 
         if (geschlecht == true) {
-            temp += ", geschlecht=Mann }";
+            temp += "\n\tGeschlecht: männlich";
         } else {
-            temp += ", geschlecht=Frau }";
+            temp += "\n\tGeschlecht: weiblich";
         }
 
         return temp;

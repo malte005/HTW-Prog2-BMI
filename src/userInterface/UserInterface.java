@@ -1,15 +1,28 @@
 /**
- * main Main-Package in der sich der Programmeinstieg befindet.
+ * userInterfaces Hier befinden sich alle Klassen die mit dem User-Interface zu tun haben.
  */
 package userInterface;
 
+import exceptions.InputException;
 import objects.Person;
 
 /**
- * BESCHREIBUNG
+ * Beschreibung:
+ * Diese Klasse handelt die Gewichtsausgabe einer Person.
  *
- * @author Malte
- * @version 0.1
+ * @author Malte Dammann
+ * E-Mail: s0549309@htw-berlin.de
+ * Bearbeitungszeitraum: 22.04.15 - 28.04.2015
+ *
+ * Modul: Programmierung 2
+ *
+ * Dateiname: Engine.java
+ * IDE: NetBeans IDE 8.0.2
+ * Java: 1.8.0_20; Java HotSpot(TM) 64-Bit
+ *
+ * @since 2015-04-22
+ * @version 0.5
+ *
  */
 public class UserInterface {
 
@@ -17,6 +30,7 @@ public class UserInterface {
     private static final Person[] PERSONEN_ARRAY = new Person[MAXPERSONEN];
     private static boolean auswahlMehrPersonenEinlesen, auswahlAllePersonenAusgeben, loopMehrPersonen;
     private static int auswahlDetailierung, index, freeIndex;
+    private int counter = 10;
 
     /**
      * Hauptmethode, in der die User-Interaktion stattfindet.
@@ -25,7 +39,9 @@ public class UserInterface {
      */
     public void start() throws Exception {
 
-        // init
+        boolean weiter = false;
+
+        // Initialisierung des Scanners
         Eingabe.init();
 
         menuBegruessung();
@@ -34,11 +50,25 @@ public class UserInterface {
         if (auswahlMehrPersonenEinlesen) {
             //Personen hinzufügen
             do {
-                freeIndex = getFreeIndex();
-                PERSONEN_ARRAY[freeIndex] = Eingabe.liesPerson();
+                freeIndex = getFirstFreeIndex();
+                try {
+                    PERSONEN_ARRAY[freeIndex] = Eingabe.liesPerson();
+                    counter++;
+                } catch (InputException e) {
+                    System.err.println("Eingabe: Bitte korrekte Daten eingeben...");
+                }
 
-                menuAusgabe("Willst du noch eine weitere Person hinzufügen? (ja = true / nein = false)");
-                loopMehrPersonen = Eingabe.liesAuswahlBoolean();
+                if (counter < MAXPERSONEN) {
+                    menuAusgabe("Willst du noch eine weitere Person hinzufügen? (ja = true / nein = false)");
+                    try {
+                        loopMehrPersonen = Eingabe.liesAuswahlBoolean();
+                    } catch (InputException e) {
+                        System.err.println("Bitte einen Boolean eingeben...");
+                    }
+                } else {
+                    loopMehrPersonen = false;
+                    System.err.println("Maximnale Anzahl für das Array ist erreicht.");
+                }
             } while (loopMehrPersonen);
 
         }
@@ -51,72 +81,127 @@ public class UserInterface {
             ausgabeArray(auswahlDetailierung);
 
         } else {
-            // Nur eine bestimmte Person ausgeben            
-            menuIndex();
-            menuAuswahlDetailierung();
-
-            try {
-                switch (auswahlDetailierung) {
-                    case 1:
-                        Ausgabe.gibAusPerson(PERSONEN_ARRAY[index]);
-                        break;
-                    case 2:
-                        Ausgabe.gibAusPersonMitGewichten(PERSONEN_ARRAY[index]);
-                        break;
-                    case 3:
-                        Ausgabe.gibAusPersonMitGewichtenUndBmi(PERSONEN_ARRAY[index]);
-                        break;
-                    default:
-                        System.err.println("");
-                        break;
+            // Nur eine bestimmte Person ausgeben  
+            do {
+                menuAuswahlDetailierung();
+                menuIndex();
+                try {
+                    switch (auswahlDetailierung) {
+                        case 1:
+                            Ausgabe.gibAusPerson(PERSONEN_ARRAY[index]);
+                            weiter = true;
+                            break;
+                        case 2:
+                            Ausgabe.gibAusPersonMitGewichten(PERSONEN_ARRAY[index]);
+                            weiter = true;
+                            break;
+                        case 3:
+                            Ausgabe.gibAusPersonMitGewichtenUndBmi(PERSONEN_ARRAY[index]);
+                            weiter = true;
+                            break;
+                        default:
+                            System.err.println("Falsche Zahl wurde eingegeben...");
+                            weiter = false;
+                            break;
+                    }
+                } catch (Exception e) {
+                    System.err.println("Index ist nicht gültig: Bitte eine ganze Zahl zwischen 0 und " + getUsedIndizes() + " eingeben...");
+                    weiter = false;
                 }
-            } catch (Exception e) {
-                System.err.println("Index ist nicht gültig - " + e.getMessage());
-            }
+            } while (!weiter);
         }
     }
 
-    private static void menuBegruessung() {
+    private void menuBegruessung() {
         erzeugePersonen();
-        menuAusgabe("Hallo. Es wurde 10 Personen angelegt. Du kannst weitere Personen anlegen wenn du möchtest.");
+        menuAusgabe("Hallo. Es wurden 10 Personen angelegt. Du kannst weitere Personen anlegen wenn du möchtest.");
     }
 
-    private static void menuAuswahlPersonenHinzufuegen() {
+    private void menuAuswahlPersonenHinzufuegen() throws InputException {
+        boolean ok = false;
         menuAusgabe("Möchtest du noch mehr Personen hinzufügen? (true / false)");
-        auswahlMehrPersonenEinlesen = Eingabe.liesAuswahlBoolean();
+
+        do {
+            try {
+                auswahlMehrPersonenEinlesen = Eingabe.liesAuswahlBoolean();
+                ok = true;
+            } catch (InputException e) {
+                System.err.println("Eingabe: Bitte einen Boolean(true/false) eingeben...");
+                ok = false;
+            }
+        } while (!ok);
     }
 
-    private static void menuAuswahlPersonenAusgeben() {
+    private void menuAuswahlPersonenAusgeben() throws InputException {
+        boolean ok = false;
         menuAusgabe("Sollen alle Personen ausgegeben werden oder nur eine bestimmte? (true = alle / false = eine)");
-        auswahlAllePersonenAusgeben = Eingabe.liesAuswahlBoolean();
+
+        do {
+            try {
+                auswahlAllePersonenAusgeben = Eingabe.liesAuswahlBoolean();
+                ok = true;
+            } catch (InputException e) {
+                System.err.println("Eingabe: Bitte einen Boolean(true/false) eingeben...");
+                ok = false;
+            }
+        } while (!ok);
     }
 
-    private static void menuAuswahlDetailierung() {
+    private void menuAuswahlDetailierung() throws InputException {
+        boolean ok = false;
         menuAusgabe("Wie detailiert soll die Ausgabe sein? "
                 + "\n 1 = nur Personendaten \n 2 = Personendaten mit Ideal- und Normalgewicht \n 3 = Personendaten, Ideal- und Normalgewicht und BMI-Wert");
-        auswahlDetailierung = Eingabe.liesAuswahlZahl();
+
+        do {
+            try {
+                auswahlDetailierung = Eingabe.liesAuswahlZahl();
+                if (auswahlDetailierung >= 1 && auswahlDetailierung <= 3) {
+                    ok = true;
+                } else {
+                    ok = false;
+                    System.err.println("Eingabe: Bitte eine Zahl von 1 - 3 eingeben...");
+                }
+
+            } catch (InputException e) {
+                System.err.println("Eingabe: Bitte eine Zahl von 1 - 3 eingeben...");
+                ok = false;
+            }
+        } while (!ok);
     }
 
-    private static void menuIndex() {
-        menuAusgabe("Welche Person soll ausgegeben werden? (Index eingeben)");
-        index = Eingabe.liesAuswahlZahl();
+    private void menuIndex() throws InputException {
+        boolean ok = false;
+        menuAusgabe("Welche Person soll ausgegeben werden? (Index eingeben von 0 bis " + getUsedIndizes() + ")");
+
+        do {
+            try {
+                index = Eingabe.liesAuswahlZahl();
+                ok = true;
+            } catch (InputException e) {
+                System.err.println("Eingabe: Bitte eine Zahl von 0 - " + getUsedIndizes() + " eingeben...");
+                ok = false;
+            }
+        } while (!ok);
     }
 
-    private static void menuAusgabe(String value) {
+    private void menuAusgabe(String value) {
         System.out.println(value);
     }
 
-    private static void erzeugePersonen() {
+    private void erzeugePersonen() {
         for (int i = 0; i < 10; i++) {
-            PERSONEN_ARRAY[i] = new Person();
+            Person temp_person = new Person();
+            String temp_name = temp_person.getName();
+            temp_person.setName(i + ". " + temp_name);
+            PERSONEN_ARRAY[i] = temp_person;
         }
     }
 
     /**
      *
-     * @return Index der ersten freien Stelle im Array
+     * @return Index der ersten freien Stelle im Array.
      */
-    private int getFreeIndex() {
+    private int getFirstFreeIndex() {
         int value = 0;
 
         for (int i = 0; i < PERSONEN_ARRAY.length; i++) {
@@ -127,6 +212,22 @@ public class UserInterface {
         }
 
         return value;
+    }
+
+    /**
+     *
+     * @return Anzahl der belegten Specihereinheiten in dem Array PERSONEN_ARRAY.
+     */
+    private int getUsedIndizes() {
+        int anzahl = 0;
+
+        for (Person PERSONEN_ARRAY_LOOP : PERSONEN_ARRAY) {
+            if (PERSONEN_ARRAY_LOOP != null) {
+                anzahl++;
+            }
+        }
+
+        return anzahl - 1;
     }
 
     /**
@@ -146,6 +247,8 @@ public class UserInterface {
                         break;
                     case 3:
                         Ausgabe.gibAusPersonMitGewichtenUndBmi(PERSONEN_ARRAY_LOOP);
+                        break;
+                    default:
                         break;
                 }
             }
